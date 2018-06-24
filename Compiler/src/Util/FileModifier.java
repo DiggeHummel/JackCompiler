@@ -16,4 +16,11 @@ public class FileModifier {
 		int index2 = absPath.lastIndexOf(".");
 		return new File(absPath.substring(0, index + 1) + name + absPath.substring(index2));
 	}
+	
+	public static File appendName(File src, String toAppend) {
+		String absPath = src.getAbsolutePath();
+		int index = absPath.lastIndexOf(".");
+		return new File(absPath.substring(0, index) + toAppend + absPath.substring(index));
+	}
+	
 }

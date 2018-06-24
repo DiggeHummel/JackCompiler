@@ -37,8 +37,8 @@ public class SyntaxAnalyzer {
 	public void extractXMLFiles(File output) {
 		if (!parser.hasParsingError()) {
 			System.out.println("Start Extraction");
-			extractTokenstream(FileModifier.changeName(output, output.getName() + "T"));
-			extractParserOutput(output);
+			extractTokenstream(FileModifier.appendName(output, "CompilerToken"));
+			extractParserOutput(FileModifier.appendName(output, "Compiler"));
 		}
 	}
 

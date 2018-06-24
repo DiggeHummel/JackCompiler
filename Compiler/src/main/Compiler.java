@@ -20,7 +20,7 @@ public class Compiler {
 			File[] jackFiles = extractJackFilesFromDirectory(dir);
 			for (File file : jackFiles) {
 				System.out.println("Start Compile File: " + file.getAbsolutePath().toString());
-				compile(loadJackFile(file), FileModifier.changeExtension(file, "out.xml"));
+				compile(loadJackFile(file), FileModifier.changeExtension(file, "xml"));
 			}
 		}
 		ErrorCatch.printErrors();
@@ -68,8 +68,6 @@ public class Compiler {
 
 	private File chooseDirectory() {
 		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(
-				new File("E:\\Lars\\Documents\\Uni Düsseldorf\\Semester 6\\NAND2Tetris\\projects\\10"));
 		if (System.getProperty("os.name").startsWith("Mac OS X")) {
 			chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		} else {
@@ -92,7 +90,6 @@ public class Compiler {
 	}
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Compiler c = new Compiler();
 		c.run();
 	}
