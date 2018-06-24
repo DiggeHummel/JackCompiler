@@ -83,7 +83,11 @@ public class XMLWriter {
 	 *            target on disk
 	 */
 	public void write(BufferedWriter bw) {
-		XMLOutputter out = new XMLOutputter(Format.getPrettyFormat());
+		Format format = Format.getPrettyFormat();
+		format.setOmitDeclaration(true);
+		format.setExpandEmptyElements(true);
+		
+		XMLOutputter out = new XMLOutputter(format);
 		try {
 			out.output(this.doc, bw);
 			System.out.println("Document as xml wrote");
