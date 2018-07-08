@@ -28,7 +28,7 @@ public class JackCompilerLibrary {
 	}
 
 	public boolean isIntegerConstant(String suspect) {
-		return suspect.matches("[0-1]+");
+		return suspect.matches("[0-9]+");
 	}
 
 	public boolean isStringConstant(String suspect) {

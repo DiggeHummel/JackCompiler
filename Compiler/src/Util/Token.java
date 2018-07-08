@@ -11,7 +11,7 @@ public class Token {
 	}
 
 	public String getName() {
-		if(type == TokenType.STRING_CONST)
+		if (type == TokenType.STRING_CONST)
 			return name.replace("\"", "");
 		return name;
 	}
@@ -27,5 +27,5 @@ public class Token {
 	public void setType(TokenType type) {
 		this.type = type;
 	}
-	
+
 }

@@ -10,6 +10,7 @@ import org.jdom2.Element;
 
 import Util.FileModifier;
 import Util.Token;
+import Util.Tree;
 import err.ErrorCatch;
 import io.XMLWriter;
 
@@ -33,12 +34,18 @@ public class SyntaxAnalyzer {
 			ErrorCatch.setErrorThrownTrue();
 		}
 	}
+	
+	public Tree getParsingTree() {
+		return this.parser.getOutput();
+	}
 
 	public void extractXMLFiles(File output) {
-		if (!parser.hasParsingError()) {
-			System.out.println("Start Extraction");
-			extractTokenstream(FileModifier.appendName(output, "CompilerToken"));
+		System.out.println("Start Extraction");
+		extractTokenstream(FileModifier.appendName(output, "CompilerToken"));
+		if (!parser.hasParsingError()) {			
 			extractParserOutput(FileModifier.appendName(output, "Compiler"));
+		}else {
+			ErrorCatch.printErrors();
 		}
 	}
 

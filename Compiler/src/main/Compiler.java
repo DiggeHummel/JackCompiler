@@ -1,6 +1,8 @@
 package main;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 
 import javax.swing.JFileChooser;
 
@@ -9,6 +11,7 @@ import err.ErrorCatch;
 import io.JackReader;
 
 public class Compiler {
+
 
 	public Compiler() {
 	}
@@ -20,7 +23,7 @@ public class Compiler {
 			File[] jackFiles = extractJackFilesFromDirectory(dir);
 			for (File file : jackFiles) {
 				System.out.println("Start Compile File: " + file.getAbsolutePath().toString());
-				compile(loadJackFile(file), FileModifier.changeExtension(file, "xml"));
+				compile(loadJackFile(file), file);
 			}
 		}
 		ErrorCatch.printErrors();
@@ -29,7 +32,18 @@ public class Compiler {
 	private void compile(String jackCode, File output) {
 		SyntaxAnalyzer analyzer = new SyntaxAnalyzer(jackCode);
 		analyzer.run();
-		analyzer.extractXMLFiles(output);
+		analyzer.extractXMLFiles(FileModifier.changeExtension(output, "xml"));
+		CodeGenerator generator = new CodeGenerator(analyzer.getParsingTree());
+		generator.run();
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(FileModifier.changeExtension(output, "vm")))) {
+			System.out.println("Write vm File: " + output.getAbsolutePath());
+			for (String line : generator.getResult()) {				
+				bw.write(line);
+				bw.newLine();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String loadJackFile(File file) {

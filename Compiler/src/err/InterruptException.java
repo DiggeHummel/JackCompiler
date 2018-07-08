@@ -5,7 +5,7 @@ public class InterruptException extends RuntimeException {
 	// unchecked Exception
 
 	public InterruptException() {
-		super("Deine EigeneUncheckedException");
+		super("InterruptUncheckedException");
 	}
 
 	public InterruptException(String msg) {

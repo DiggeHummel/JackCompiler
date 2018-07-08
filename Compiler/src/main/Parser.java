@@ -42,7 +42,9 @@ public class Parser {
 	// #
 	private Tree terminalSymbol(String... symbol) {
 		if (equalsNextToken(symbol)) {
-			Tree out = new Tree((new TreeNode(getNextTokenType().toString(), getNextTokenName(), true)));
+			TreeNode node = new TreeNode(getNextTokenType().toString(), getNextTokenName(), true);
+			node.addAdditive(getNextTokenType());
+			Tree out = new Tree(node);
 			index++;
 			return out;
 		}
@@ -99,8 +101,8 @@ public class Parser {
 	 * ('static'|'field') type varName (',' varName)* ';'
 	 */
 	private Tree compClassVarDec() {
-		Tree t = new Tree();
-		while (equalsNextToken("static", "field")) {
+		Tree t = new Tree(new TreeNode("classVarDec"));
+		if (equalsNextToken("static", "field")) {
 			t.merge(terminalSymbol("static", "field"));
 			t.merge(compType());
 			t.merge(compIdentifier());
@@ -133,8 +135,8 @@ public class Parser {
 	private Tree compSubroutineDec() {
 		Tree t = new Tree(new TreeNode("subroutineDec"));
 		t.merge(terminalSymbol("constructor", "function", "method"));
-		if (equalsNextToken("void")) {
-			t.merge(terminalSymbol("void"));
+		if (equalsNextToken("void", "int", "char", "boolean")) {
+			t.merge(terminalSymbol(getNextTokenName()));
 		} else if (getNextTokenType() == TokenType.IDENTIFIER) {
 			t.merge(compIdentifier());
 		}
@@ -199,9 +201,11 @@ public class Parser {
 	 */
 	private Tree compIdentifier() {
 		if (getNextTokenType() == TokenType.IDENTIFIER) {
-			Tree t = new Tree(new TreeNode(getNextTokenType().toString(), getNextTokenName(), true));
+			TreeNode node = new TreeNode(getNextTokenType().toString(), getNextTokenName(), true);
+			node.addAdditive(getNextTokenType());
+			Tree out = new Tree(node);
 			index++;
-			return t;
+			return out;
 		}
 		return new Tree();
 	}
@@ -215,7 +219,7 @@ public class Parser {
 	 */
 	private Tree compStatements() {
 		Tree t = new Tree(new TreeNode("statements")), tmp;
-		while (!(tmp = compStatement()).isEmpty()) {
+		while ((tmp = compStatement()).hasTerminalSymbol()) {
 			t.merge(tmp);
 		}
 		return t;
@@ -311,7 +315,7 @@ public class Parser {
 		Tree t = new Tree(new TreeNode("returnStatement"));
 		t.merge(terminalSymbol("return"));
 		Tree tmp = compExpression();
-		if (!tmp.isEmpty()) {
+		if (tmp.hasTerminalSymbol()) {
 			t.merge(tmp);
 		}
 		t.merge(terminalSymbol(";"));
@@ -367,7 +371,7 @@ public class Parser {
 			t.merge(terminalSymbol("("));
 			t.merge(compExpression());
 			t.merge(terminalSymbol(")"));
-		} else if (!(t = compUnaryOperation()).isEmpty()) {
+		} else if ((t = compUnaryOperation()).hasTerminalSymbol()) {
 			t.merge(compTerm());
 		}
 		return t;
@@ -403,8 +407,9 @@ public class Parser {
 		if ((tmp = compExpression()).hasTerminalSymbol()) {
 			t.merge(tmp);
 			Tree tmp2 = new Tree();
-			while (!(tmp2 = terminalSymbol(",")).isEmpty()) {
-				tmp2.merge(compExpression());
+			while ((tmp2 = terminalSymbol(",")).hasTerminalSymbol()) {
+				t.merge(tmp2);
+				tmp2 = compExpression();
 				t.merge(tmp2);
 			}
 		}

@@ -8,6 +8,7 @@ public class ErrorCatch {
 	public static final String FileChooser = "FileChooser";
 	public static final String SyntaxAnalyzer = "SyntaxAnalyzer";
 	public static final String XML = "XMLWriter";
+	public static final String CodeGen = "CodeGenerator";
 	private static boolean errorThrown = false;
 
 	private static final String fatalMsg0 = "FatalError\n\t[thrown by";
